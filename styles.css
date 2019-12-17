@@ -1,7 +1,7 @@
 .arrayElement {
     background-color: rgb(54, 54, 54);
     margin: 0.5%;
-    height: 4%;
+    height: 5%;
     max-width: 98%;
     font-size: 12px;
     color: rgb(236, 236, 236);
@@ -30,9 +30,12 @@ body {
     background-color: cadetblue;
 }
 
+.sortBtns {
+    margin-top: 2%;
+}
+
 .graph {
     position: relative;
-    padding-top: 2%;
 }
 
 .header {

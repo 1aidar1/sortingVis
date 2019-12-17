@@ -56,7 +56,7 @@ function start() {
             width: r + "%"
         }, 400);
         arr.push(r);
-        top_dist.push($(e).offset().top);
+        top_dist.push($(e).offset().top - 100);
 
     }
     $('.graph').css('padding-bottom', (top_dist[ARR_SIZE - 1] + 15) + 'px');
@@ -80,13 +80,16 @@ $('#mergeSort').on('click', function() {
     })
     //shuffle button
 $('#shuffleBtn').on('click', () => {
-    if (!isActive) {
-        isActive = true;
-        arr = [];
-        $element = [];
-        start();
-        rearange();
-    }
+
+    setTimeout(() => {
+        if (!isActive) {
+            isActive = true;
+            arr = [];
+            $element = [];
+            start();
+            rearange();
+        }
+    }, 200);
 })
 
 //set speed
