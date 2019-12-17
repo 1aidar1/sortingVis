@@ -201,7 +201,7 @@ function selectionSort(i) {
 
 //slide d to pos y
 function slide(d, pos) {
-    $(d).animate({ top: pos + 'px' }, 400);
+    $(d).animate({ top: pos + 'px' }, SPEED / 5);
 }
 //SelectionSwap
 function swap(a, i, min) {
@@ -217,7 +217,9 @@ function swap(a, i, min) {
     $element[min].addClass('sorted');
     if ($element[ARR_SIZE - 2].hasClass('sorted') && $element[ARR_SIZE - 3].hasClass('sorted') && $element[0].hasClass('sorted') && $element[ARR_SIZE - 4].hasClass('sorted')) {
         $element[ARR_SIZE - 1].addClass('sorted');
-        isActive = false;
+        setTimeout(() => {
+            isActive = false;
+        }, 400);
     }
 
     let tempE = $element[i];
