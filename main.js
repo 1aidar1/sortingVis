@@ -12,6 +12,7 @@ const $speedLabel = $('#speedLabel');
 
 let SPEED = 2500;
 let isActive = false;
+let stop = false;
 
 function main() {
     start();
@@ -39,7 +40,6 @@ function rearange() {
 
 //creating arrays
 function start() {
-
     isActive = false;
     for (let i = 0; i < ARR_SIZE; i++) {
 
@@ -57,6 +57,7 @@ function start() {
             width: r + "%"
         }, 400);
         arr.push(r);
+        // ($(window).height() / 4.5)
         top_dist.push($(e).offset().top - 100);
 
     }
@@ -88,13 +89,14 @@ $('#insertionSortBtn').on('click', function() {
 })
 
 //merge button
-/* $('#mergeSort').on('click', function() {
-        if (!isActive) {
-            isActive = true;
-            arr = mergeSort(arr);
-            console.log(arr);
-        }
-    }) */
+$('#mergeSort').on('click', function() {
+    if (!isActive) {
+        isActive = true;
+        arr = mergeSort(arr);
+        console.log(arr);
+    }
+})
+
 //shuffle button
 $('#shuffleBtn').on('click', () => {
 
@@ -107,6 +109,17 @@ $('#shuffleBtn').on('click', () => {
             rearange();
         }
     }, 200);
+})
+let STOPTIMER = 0;
+//stop button
+$('#stopBtn').on('click', () => {
+        stop = true;
+        STOPTIMER = 9999999;
+    })
+    //continue continueBtn
+$('#continueBtn').on('click', () => {
+    stop = false;
+    STOPTIMER = 0;
 })
 
 //set speed
@@ -123,61 +136,89 @@ $('#speedBtn1x').on('click', () => {
     SPEED = 1250;
 })
 $('#speedBtn2x').on('click', () => {
-        $speedLabel.html('Speed: 2x');
-        SPEED = 700;
-    })
-    //innerInsertionSort
+    $speedLabel.html('Speed: 2x');
+    SPEED = 700;
+})
+
+//innerInsertionSort
 function innerInsertionSort(i, j) {
-    if (j >= 0 && arr[i] > arr[j]) {
+    if (!stop) {
+
+        setTimeout(() => {
+            if (j >= 0 && arr[i] > arr[j]) {
 
 
-        swap(arr, i, j, true);
-        innerInsertionSort(i - 1, i);
+                swap(arr, i, j, true);
+                innerInsertionSort(i - 1, i);
 
+            } else {
+                $element[j].addClass('sorted');
+                return;
+            }
+        }, STOPTIMER);
     } else {
-        $element[j].addClass('sorted');
-        return;
+        setTimeout(() => {
+            innerSelectionSort(i, j);
+        }, 1000);
     }
+
 }
 
 //insertion sort 
 function insertionSort(i) {
-    if (i >= ARR_SIZE) {
-        isActive = false;
-        return;
+    if (!stop) {
+        setTimeout(() => {
+            if (i >= ARR_SIZE) {
+                isActive = false;
+                return;
+            }
+            innerInsertionSort(i - 1, i);
+            console.log(arr + "   " + i);
+            setTimeout(() => {
+                $element[i].addClass('sorted');
+                insertionSort(i + 1);
+            }, SPEED - ((ARR_SIZE - i) * (SPEED / 20)));
+        }, STOPTIMER);
+    } else {
+        setTimeout(() => {
+            insertionSort(i);
+        }, 1000);
     }
-    innerInsertionSort(i - 1, i);
-    console.log(arr + "   " + i);
-    setTimeout(() => {
-        $element[i].addClass('sorted');
-        insertionSort(i + 1);
-    }, SPEED);
+
+
+
 }
 
 ///buble sort 
 function bubleSort(i) {
 
-    if (i >= ARR_SIZE) {
-        $($element[ARR_SIZE - 1].addClass('sorted'));
-        setTimeout(() => {
-            isActive = false;
+    if (!stop) {
 
-            return;
-        }, 200);
+        if (i >= ARR_SIZE) {
+            $($element[ARR_SIZE - 1].addClass('sorted'));
+            setTimeout(() => {
+                isActive = false;
 
+                return;
+            }, 200);
+
+        } else {
+            $($element[i].addClass('sorted'));
+            innerBubleSort(i, i + 1);
+            setTimeout(() => {
+                $($element[i].removeClass('active'));
+                bubleSort(i + 1);
+            }, SPEED * 2.5);
+        }
     } else {
-        $($element[i].addClass('sorted'));
-        innerBubleSort(i, i + 1);
         setTimeout(() => {
-            $($element[i].removeClass('active'));
-            bubleSort(i + 1);
-        }, SPEED * 2.5);
+            bubleSort(i);
+        }, 1000);
     }
 
 }
 //innerBubleSort
 function innerBubleSort(i, j) {
-
     if (j >= ARR_SIZE) {
         return;
     }
@@ -193,6 +234,8 @@ function innerBubleSort(i, j) {
 
         innerBubleSort(i, j + 1);
     }, SPEED / 4);
+
+
 }
 //mergeSort
 function mergeSort(a) {
@@ -202,7 +245,6 @@ function mergeSort(a) {
     let m = Math.floor(a.length / 2);
     let l = a.slice(0, m);
     let r = a.slice(m);
-
     let ans = merge(mergeSort(l), mergeSort(r));
     return ans;
 
@@ -234,6 +276,7 @@ function merge(l, r) {
 
     return temp;
 }
+
 //merge swapAnimation
 function mergeSwap(min, i) {
 
@@ -261,7 +304,6 @@ let selectionSortMin;
 
 function innerSelectionSort(j) {
 
-
     if (j >= ARR_SIZE) {
 
         return;
@@ -281,34 +323,40 @@ function innerSelectionSort(j) {
 
     }, SPEED / (ARR_SIZE - 1));
 
+
+
 }
 
 //selectionSort
 function selectionSort(i) {
-
-    if (i >= ARR_SIZE) {
-        $element[ARR_SIZE - 1].addClass('sorted');
-        setTimeout(() => {
-            isActive = false;
-
-            return;
-        }, 200);
-    } else {
-        selectionSortMin = i;
-        $element[selectionSortMin].addClass('sorted');
-
-        innerSelectionSort(i);
-        setTimeout(() => {
-            console.log(i + "   " + selectionSortMin);
-            swap(arr, i, selectionSortMin, false);
+    if (!stop) {
+        if (i >= ARR_SIZE) {
+            $element[ARR_SIZE - 1].addClass('sorted');
             setTimeout(() => {
-                selectionSort(i + 1);
-            }, 400);
+                isActive = false;
 
-        }, SPEED + 300);
+                return;
+            }, 200);
+        } else {
+            selectionSortMin = i;
+            $element[selectionSortMin].addClass('sorted');
+
+            innerSelectionSort(i);
+            setTimeout(() => {
+                console.log(i + "   " + selectionSortMin);
+                swap(arr, i, selectionSortMin, false);
+                setTimeout(() => {
+                    selectionSort(i + 1);
+                }, 400);
+
+            }, SPEED + 300);
+        }
+
+    } else {
+        setTimeout(() => {
+            selectionSort(i);
+        }, 1000);
     }
-
-
 }
 
 
@@ -318,7 +366,7 @@ function slide(d, pos) {
 }
 //faster slide
 function fasterSlide(d, pos) {
-    $(d).animate({ top: pos + 'px' }, SPEED / 10);
+    $(d).animate({ top: pos + 'px' }, SPEED / 9);
 }
 //SelectionSwap
 function swap(a, i, min, fast) {
