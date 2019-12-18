@@ -50,6 +50,7 @@ function start() {
         $element.push($(e));
         $(e).html("&nbsp" + r + " ");
         $(e).removeClass('sorted');
+        $(e).removeClass('active');
 
         $(e).css('width', "0px");
         $(e).animate({
@@ -63,7 +64,14 @@ function start() {
 
 
 }
-//selection button
+
+$('#bubleSortBtn').on('click', function() {
+        if (!isActive) {
+            isActive = true;
+            bubleSort(0);
+        }
+    })
+    //selection button
 $($selectionSortBtn).on('click', function() {
         if (!isActive) {
             isActive = true;
@@ -71,13 +79,13 @@ $($selectionSortBtn).on('click', function() {
         }
     })
     //merge button
-$('#mergeSort').on('click', function() {
-        if (!isActive) {
-            isActive = true;
-            arr = mergeSort(arr);
-            console.log(arr);
-        }
-    })
+    /* $('#mergeSort').on('click', function() {
+            if (!isActive) {
+                isActive = true;
+                arr = mergeSort(arr);
+                console.log(arr);
+            }
+        }) */
     //shuffle button
 $('#shuffleBtn').on('click', () => {
 
@@ -110,6 +118,46 @@ $('#speedBtn2x').on('click', () => {
     SPEED = 700;
 })
 
+///buble sort 
+function bubleSort(i) {
+
+    if (i >= ARR_SIZE) {
+        $($element[ARR_SIZE - 1].addClass('sorted'));
+        setTimeout(() => {
+            isActive = false;
+
+            return;
+        }, 200);
+
+    } else {
+        $($element[i].addClass('sorted'));
+        innerBubleSort(i, i + 1);
+        setTimeout(() => {
+            $($element[i].removeClass('active'));
+            bubleSort(i + 1);
+        }, SPEED * 2);
+    }
+
+}
+//innerBubleSort
+function innerBubleSort(i, j) {
+
+    if (j >= ARR_SIZE) {
+        return;
+    }
+    $($element[j].addClass('active'));
+
+    setTimeout(() => {
+        if (arr[j] < arr[i]) {
+            $($element[i].removeClass('sorted'));
+            swap(arr, i, j);
+        }
+
+        $($element[j].removeClass('active'));
+
+        innerBubleSort(i, j + 1);
+    }, SPEED / 4);
+}
 //mergeSort
 function mergeSort(a) {
     if (a.length == 1) {
@@ -118,7 +166,6 @@ function mergeSort(a) {
     let m = Math.floor(a.length / 2);
     let l = a.slice(0, m);
     let r = a.slice(m);
-
 
     let ans = merge(mergeSort(l), mergeSort(r));
     return ans;
@@ -150,20 +197,41 @@ function merge(l, r) {
     }
 
     return temp;
+}
+//merge swapAnimation
+function mergeSwap(min, i) {
 
+    slide($element[min], top_dist[i]);
+    slide($element[i], top_dist[min]);
+
+    $element[min].addClass('sorted');
+    if ($element[ARR_SIZE - 2].hasClass('sorted') && $element[ARR_SIZE - 3].hasClass('sorted') && $element[0].hasClass('sorted') && $element[ARR_SIZE - 4].hasClass('sorted')) {
+        $element[ARR_SIZE - 1].addClass('sorted');
+        setTimeout(() => {
+            isActive = false;
+        }, 400);
+    }
+
+    let tempE = $element[i];
+    $element[i] = $element[min];
+    $element[min] = tempE;
+
+
+    console.log(arr);
 }
 
 //innerSelection Sort
 let selectionSortMin;
 
 function innerSelectionSort(j) {
-    if (!$element[j].hasClass('sorted')) {
-        $element[j].addClass('active');
-    }
+
 
     if (j >= ARR_SIZE) {
 
         return;
+    }
+    if (!$element[j].hasClass('sorted')) {
+        $element[j].addClass('active');
     }
     if (arr[j] < arr[selectionSortMin]) {
         $element[j].addClass('sorted');
@@ -183,21 +251,27 @@ function innerSelectionSort(j) {
 function selectionSort(i) {
 
     if (i >= ARR_SIZE) {
-        return;
+        $element[ARR_SIZE - 1].addClass('sorted');
+        setTimeout(() => {
+            isActive = false;
+
+            return;
+        }, 200);
+    } else {
+        selectionSortMin = i;
+        $element[selectionSortMin].addClass('sorted');
+
+        innerSelectionSort(i);
+        setTimeout(() => {
+            console.log(i + "   " + selectionSortMin);
+            swap(arr, i, selectionSortMin);
+            setTimeout(() => {
+                selectionSort(i + 1);
+            }, 400);
+
+        }, SPEED + 300);
     }
 
-    selectionSortMin = i;
-    $element[selectionSortMin].addClass('sorted');
-
-    innerSelectionSort(i);
-    setTimeout(() => {
-        console.log(i + "   " + selectionSortMin);
-        swap(arr, i, selectionSortMin);
-        setTimeout(() => {
-            selectionSort(i + 1);
-        }, 400);
-
-    }, SPEED + 450);
 
 }
 
@@ -218,12 +292,7 @@ function swap(a, i, min) {
     slide($element[i], top_dist[min]);
 
     $element[min].addClass('sorted');
-    if ($element[ARR_SIZE - 2].hasClass('sorted') && $element[ARR_SIZE - 3].hasClass('sorted') && $element[0].hasClass('sorted') && $element[ARR_SIZE - 4].hasClass('sorted')) {
-        $element[ARR_SIZE - 1].addClass('sorted');
-        setTimeout(() => {
-            isActive = false;
-        }, 400);
-    }
+
 
     let tempE = $element[i];
     $element[i] = $element[min];
@@ -232,4 +301,4 @@ function swap(a, i, min) {
 
     console.log(arr);
 }
-$(document).ready(main);
+$(document).ready(main);;

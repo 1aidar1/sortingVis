@@ -74,6 +74,7 @@ h1 {
 }
 
 label {
+    user-select: none;
     text-align: center;
     color: rgb(0, 0, 0);
     background-color: rgb(170, 170, 170);
