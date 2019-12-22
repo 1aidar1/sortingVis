@@ -110,16 +110,19 @@ $('#shuffleBtn').on('click', () => {
         }
     }, 200);
 })
-let STOPTIMER = 0;
+let STOPTIMER = 1;
 //stop button
+function stopBtnClick() {
+    stop = true;
+    STOPTIMER = Infinity;
+}
 $('#stopBtn').on('click', () => {
-        stop = true;
-        STOPTIMER = 9999999;
+        stopBtnClick();
     })
     //continue continueBtn
 $('#continueBtn').on('click', () => {
     stop = false;
-    STOPTIMER = 0;
+    STOPTIMER = 1;
 })
 
 //set speed
@@ -138,6 +141,11 @@ $('#speedBtn1x').on('click', () => {
 $('#speedBtn2x').on('click', () => {
     $speedLabel.html('Speed: 2x');
     SPEED = 700;
+})
+
+//size
+$('#sizeChanger').on('mouseup', () => {
+    alert($('#sizeChanger').innerHTMl);
 })
 
 //innerInsertionSort
@@ -164,7 +172,7 @@ function innerInsertionSort(i, j) {
 
 }
 
-//insertion sort 
+//insertion sort    
 function insertionSort(i) {
     if (!stop) {
         setTimeout(() => {
@@ -184,16 +192,12 @@ function insertionSort(i) {
             insertionSort(i);
         }, 1000);
     }
-
-
-
 }
-
+let bubleSortStopTimer = 1;
 ///buble sort 
 function bubleSort(i) {
 
     if (!stop) {
-
         if (i >= ARR_SIZE) {
             $($element[ARR_SIZE - 1].addClass('sorted'));
             setTimeout(() => {
@@ -204,11 +208,14 @@ function bubleSort(i) {
 
         } else {
             $($element[i].addClass('sorted'));
+
             innerBubleSort(i, i + 1);
+
             setTimeout(() => {
+
                 $($element[i].removeClass('active'));
                 bubleSort(i + 1);
-            }, SPEED * 2.5);
+            }, SPEED * 2.7);
         }
     } else {
         setTimeout(() => {
@@ -217,8 +224,11 @@ function bubleSort(i) {
     }
 
 }
+
+
 //innerBubleSort
 function innerBubleSort(i, j) {
+
     if (j >= ARR_SIZE) {
         return;
     }
@@ -235,7 +245,10 @@ function innerBubleSort(i, j) {
         innerBubleSort(i, j + 1);
     }, SPEED / 4);
 
+}
 
+function getJ(j) {
+    return j;
 }
 //mergeSort
 function mergeSort(a) {

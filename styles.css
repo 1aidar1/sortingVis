@@ -11,20 +11,23 @@
 html,
 body {
     max-zoom: 125%;
-    background-color: whitesmoke;
+    background-color: rgba(245, 245, 245, 0.582);
     font-family: "Comic Sans MS", 'serif';
     margin: 0%;
     display: flex;
     flex-direction: column;
+    height: 100%;
 }
 
 .bodyDiv {
+    background-color: rgb(235, 235, 235);
     border: black;
     border-style: solid;
-    margin-left: 1%;
-    margin-top: 1%;
+    margin-left: 1.2%;
+    margin-top: 1.2%;
     border-bottom: thick;
-    height: 100%;
+    border-right: thick;
+    flex-grow: 1;
 }
 
 .footer {
@@ -73,7 +76,16 @@ h1 {
     margin-left: 0.25%;
 }
 
+#sizeLabel {
+    font-size: 20px;
+    margin-left: 0.25%;
+}
+
 .speedChange {
+    margin-left: 15px;
+}
+
+.sizeChange {
     margin-left: 15px;
 }
 
