@@ -1,7 +1,7 @@
 'use strict';
 
 const MAX_NUMBER = 100;
-const ARR_SIZE = 12;
+let ARR_SIZE = 14;
 
 let arr = [];
 let $element = [];
@@ -67,20 +67,24 @@ function start() {
 }
 
 $('#bubleSortBtn').on('click', function() {
-        if (!isActive) {
-            isActive = true;
-            bubleSort(0);
-        }
-    })
-    //selection button
+    if (!isActive) {
+        blockSpeedBtn();
+        isActive = true;
+        bubleSort(0);
+    }
+})
+
+//selection button
 $($selectionSortBtn).on('click', function() {
     if (!isActive) {
+        blockSpeedBtn();
         isActive = true;
         selectionSort(0);
     }
 })
 $('#insertionSortBtn').on('click', function() {
     if (!isActive) {
+        blockSpeedBtn();
         isActive = true;
 
         insertionSort(0);
@@ -91,6 +95,7 @@ $('#insertionSortBtn').on('click', function() {
 //merge button
 $('#mergeSort').on('click', function() {
     if (!isActive) {
+        blockSpeedBtn();
         isActive = true;
         arr = mergeSort(arr);
         console.log(arr);
@@ -117,39 +122,61 @@ function stopBtnClick() {
     STOPTIMER = Infinity;
 }
 $('#stopBtn').on('click', () => {
-        stopBtnClick();
-    })
-    //continue continueBtn
-$('#continueBtn').on('click', () => {
-    stop = false;
-    STOPTIMER = 1;
+    $('.speedBtn').removeClass('blocked');
+    $('#stopBtn').css('background-color', 'grey');
+    isActive = false;
+    stopBtnClick();
+
 })
+
+//continue continueBtn
+$('#continueBtn').on('click', () => {
+    if (stop === true) {
+        blockSpeedBtn();
+        $('#stopBtn').css('background-color', "");
+        isActive = true;
+        stop = false;
+        STOPTIMER = 1;
+    }
+})
+
 
 //set speed
 $('#speedBtn025x').on('click', () => {
-    $speedLabel.html('Speed: 0.25x');
-    SPEED = 5000;
+    if (!isActive) {
+        $speedLabel.html('Speed: 0.25x');
+        SPEED = 5000;
+    }
 })
 $('#speedBtn050x').on('click', () => {
-    $speedLabel.html('Speed: 0.5x');
-    SPEED = 2500;
+    if (!isActive) {
+        $speedLabel.html('Speed: 0.5x');
+        SPEED = 2500;
+    }
 })
 $('#speedBtn1x').on('click', () => {
-    $speedLabel.html('Speed: 1x');
-    SPEED = 1250;
+    if (!isActive) {
+        $speedLabel.html('Speed: 1x');
+        SPEED = 1250;
+    }
 })
 $('#speedBtn2x').on('click', () => {
-    $speedLabel.html('Speed: 2x');
-    SPEED = 700;
+    if (!isActive) {
+        $speedLabel.html('Speed: 2x');
+        SPEED = 700;
+    }
 })
 
-//size
-$('#sizeChanger').on('mouseup', () => {
-    alert($('#sizeChanger').innerHTMl);
-})
 
+//block speed btns
+function blockSpeedBtn() {
+
+    $('.speedBtn').addClass('blocked');
+
+}
 //innerInsertionSort
 function innerInsertionSort(i, j) {
+
     if (!stop) {
 
         setTimeout(() => {
@@ -216,6 +243,7 @@ function bubleSort(i) {
                 $($element[i].removeClass('active'));
                 bubleSort(i + 1);
             }, SPEED * 2.7);
+
         }
     } else {
         setTimeout(() => {
@@ -243,7 +271,8 @@ function innerBubleSort(i, j) {
         $($element[j].removeClass('active'));
 
         innerBubleSort(i, j + 1);
-    }, SPEED / 4);
+    }, SPEED / 4.8);
+    return;
 
 }
 
@@ -372,6 +401,10 @@ function selectionSort(i) {
     }
 }
 
+//block speed btns
+function blockSpeedChange() {
+    $('.speedBtn').addClass('blocked');
+}
 
 //slide d to pos y
 function slide(d, pos) {

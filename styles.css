@@ -96,6 +96,10 @@ h1 {
     padding-bottom: 0%;
 }
 
+.blocked {
+    opacity: 60%;
+}
+
 label {
     user-select: none;
     text-align: center;
